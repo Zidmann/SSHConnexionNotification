@@ -18,19 +18,23 @@ PORT_DST=$(echo "$SSH_CONNECTION" | awk -F' ' '{print $4}')
 DNS_SRC_REVERSE=$(dig -x "$IP_SRC" +short)
 if [ "$DNS_SRC_REVERSE" != "" ]
 then
-	src_msg=" ($DNS_SRC_REVERSE)"
+	SRC_MSG=" ($DNS_SRC_REVERSE)"
 fi
 
 # Log the connection
-MESSAGE="$USER($UID) has just logged in from $IP_SRC$src_msg with port $PORT_SRC to $IP_DST ($HOSTNAME) with port $PORT_DST at $CONNECT_TIME"
+MESSAGE="$USER($UID) has just logged in from $IP_SRC$SRC_MSG with port $PORT_SRC to $IP_DST ($HOSTNAME) with port $PORT_DST at $CONNECT_TIME"
 echo "[i] $MESSAGE"
 logger -t ssh-wrapper "$MESSAGE"
 
+# Push the notification through the webhook
 if [ -f "$ENV_FILE" ]
 then
 	source "$ENV_FILE"
 	curl -X POST -H "Content-Type: application/json"  -d "{\"username\":\"$HOSTNAME\", \"content\":\"$MESSAGE\"}" "$WEBHOOK_URL"
-else
-	logger -t ssh-wrapper "[-] "
+	RSLT="$?"
+	if [ "$RSLT" != "0" ]
+	then
+		logger -t ssh-wrapper "[-] Error in the curl command to the webhook to notify an SSH connection [error code ($RSLT)]"
+	fi
 fi
 
