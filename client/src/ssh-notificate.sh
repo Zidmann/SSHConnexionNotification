@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#
+CONNECT_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+
+#
+DIRNAME=$(dirname "$(dirname "$(readlink -f "$0")")")
+ENV_FILE="$DIRNAME/webhook.env"
+
+# Definition of the useful parameters
+HOSTNAME=$(hostname)
+
+IP_SRC=$(echo "$SSH_CONNECTION"   | awk -F' ' '{print $1}')
+PORT_SRC=$(echo "$SSH_CONNECTION" | awk -F' ' '{print $2}')
+IP_DST=$(echo "$SSH_CONNECTION"   | awk -F' ' '{print $3}')
+PORT_DST=$(echo "$SSH_CONNECTION" | awk -F' ' '{print $4}')
+
+DNS_SRC_REVERSE=$(dig -x "$IP_SRC" +short)
+if [ "$DNS_SRC_REVERSE" != "" ]
+then
+	src_msg=" ($DNS_SRC_REVERSE)"
+fi
+
+# Log the connection
+MESSAGE="$USER($UID) has just logged in from $IP_SRC$src_msg with port $PORT_SRC to $IP_DST ($HOSTNAME) with port $PORT_DST at $CONNECT_TIME"
+echo "[i] $MESSAGE"
+logger -t ssh-wrapper "$MESSAGE"
+
+if [ -f "$ENV_FILE" ]
+then
+	source "$ENV_FILE"
+	curl -X POST -H "Content-Type: application/json"  -d "{\"username\":\"$HOSTNAME\", \"content\":\"$MESSAGE\"}" "$WEBHOOK_URL"
+else
+	logger -t ssh-wrapper "[-] "
+fi
+
