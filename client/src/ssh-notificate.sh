@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#
+# Define the time when the script is called and so when the user connects
 CONNECT_TIME=$(date '+%Y-%m-%d %H:%M:%S')
 
-#
+# Define the environment file path
 DIRNAME=$(dirname "$(dirname "$(readlink -f "$0")")")
 ENV_FILE="$DIRNAME/webhook.env"
 
-# Definition of the useful parameters
+# Define the useful parameters
 HOSTNAME=$(hostname)
 
 IP_SRC=$(echo "$SSH_CONNECTION"   | awk -F' ' '{print $1}')

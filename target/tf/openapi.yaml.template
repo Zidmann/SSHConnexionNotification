@@ -1,0 +1,42 @@
+swagger: "2.0"
+info:
+  title: "gateway-demo"
+  description: "API Gateway demo with 2 cloud run backends"
+  version: "1.0.0"
+#host: "planar-effect-320423.appspot.com"
+schemes:
+  - "https"
+produces:
+  - application/json
+security:
+  - api_key: []
+paths:
+  "/api/webhook/v1":
+    get:
+      operationId: "users"
+      summary: Users svc
+      x-google-backend:
+        address: ${webhook_adress}
+      responses:
+        200:
+          description: "Success."
+        404:
+          description: "Page not found"
+  "/api/isalive/v1":
+    get:
+      operationId: "locations"
+      summary: Locations svc
+      x-google-backend:
+        address: ${isalive_adress}
+      responses:
+        200:
+          description: "Success."
+        404:
+          description: "Page not found"
+securityDefinitions:
+  # This section configures basic authentication with an API key.
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
+
