@@ -35,14 +35,11 @@ func StartServer() error {
 	g.GET("/isalive", isAlive)
 
 	/* Authenticated route */
-
-	// Extract the jwt signing key from the secret vault
-	jwt_secret := getJwtKey()
-
-	// Configure middleware with the custom claims type
-	config := getJWTconfig(jwt_secret)
+	signingKey := getJwtSigningKey()
+	config := getJWTconfig(signingKey)
 	g.Use(middleware.JWTWithConfig(config))
 
+	// Forward a message
 	g.POST("/message/:channel", sendMessage)
 
 	// Server

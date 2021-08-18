@@ -2,45 +2,64 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 
 	echo "github.com/labstack/echo/v4"
 )
 
-type jsonbody struct {
-	Content string `json:"content"`
-}
-
 /*
- * Controllers of the routes
+ * Controller functions
  */
 func isAlive(c echo.Context) error {
-	return c.JSON(http.StatusOK, "Hello I am still alive !")
+	response := Response{Message: "Hello I am still alive !"}
+	return c.JSON(http.StatusOK, response)
 }
 
 func sendMessage(c echo.Context) error {
-	// Extract the token from the secret vault
+	// Extract the channel_id from the URL
 	channel_id := c.Param("channel")
-	token := getToken(channel_id)
+
+	// Check if the JWT token allows this channel
+	jwt := c.QueryParam("jwt_key")
+	signingKey := getJwtSigningKey()
+
+	if !hasChannel(channel_id, jwt, signingKey) {
+		message := "Unauthorized channel"
+		response := Response{Message: message}
+		c.JSON(http.StatusUnauthorized, response)
+		return errors.New(message)
+	}
 
 	// Extract all the required params to post the message
+	token := getToken(channel_id)
 	url := getHTTPurl(channel_id, token)
-	username := getJWTusername(token)
+	username := extractUsername(jwt, signingKey)
 
+	// Get the content from the HTTP body
 	defer c.Request().Body.Close()
 	body, err := ioutil.ReadAll(c.Request().Body)
 	if err != nil {
+		response := Response{Message: "Error in body reading"}
+		c.JSON(http.StatusInternalServerError, response)
 		return err
 	}
-	json_data := string(body)
 
-	body_elmt := jsonbody{}
-	err = json.Unmarshal([]byte(json_data), &body_elmt)
+	request_body := Request{}
+	json_string := string(body)
+	err = json.Unmarshal([]byte(json_string), &request_body)
 	if err != nil {
+		response := Response{Message: "Error in content deserialization"}
+		c.JSON(http.StatusInternalServerError, response)
 		return err
 	}
-	content := body_elmt.Content
+	content := request_body.Content
 
-	return postMessage(url, username, content)
+	// Call the API
+	httpCode, message, err := callAPI(url, username, content)
+	response := Response{Message: message}
+
+	c.JSON(httpCode, response)
+	return err
 }

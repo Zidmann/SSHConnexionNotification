@@ -3,41 +3,44 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
+/*
+ * Functions to interact with external services
+ */
+
+// Build the final URL
 func getHTTPurl(channel_id string, token string) string {
 	return "https://discord.com/api/webhooks/" + channel_id + "/" + token
 }
 
-/*
- * Functions to interact with different services
- */
-func postMessage(url string, username string, content string) error {
-	reqBody, err := json.Marshal(map[string]string{
-		"content":  content,
-		"username": username,
-	})
+// Send the message
+func callAPI(url string, username string, content string) (int, string, error) {
+	request := Request{Username: username, Content: content}
+	reqBody, err := json.Marshal(request)
 
 	if err != nil {
-		print(err)
-		return err
+		return http.StatusInternalServerError, "Error in distant body serialization", err
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(reqBody))
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+
+	resp, err := client.Post(url, "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
-		print(err)
-		return err
+		return http.StatusBadGateway, "Error during the POST request", err
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		print(err)
-		return err
+		return http.StatusInternalServerError, "Error in distant body reading", err
 	}
-	fmt.Println(string(body))
-	return nil
+	json_string := string(body)
+
+	return http.StatusOK, json_string, nil
 }
