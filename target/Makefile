@@ -1,3 +1,6 @@
+SENDMSG_APP_VERSION=$(shell cat services/send_message/VERSION)
+SENDMSG_APP_IMAGE=gcr.io/$(PROJECT_ID)/sendmessage:$(SENDMSG_APP_VERSION)
+
 gcp-enable-apis:
 	gcloud services enable cloudresourcemanager.googleapis.com --project $(PROJECT_ID)
 	gcloud services enable cloudbuild.googleapis.com --project $(PROJECT_ID)
@@ -6,8 +9,6 @@ gcp-enable-apis:
 	gcloud services enable servicecontrol.googleapis.com --project $(PROJECT_ID)
 
 gcr-push-services:
-	(cd services/report_inactivity &&\
-	gcloud builds submit --tag $(INACTIVITYRT_APP_IMAGE) --project $(PROJECT_ID))
 	(cd services/send_message &&\
 	gcloud builds submit --tag $(SENDMSG_APP_IMAGE) --project $(PROJECT_ID))
 
