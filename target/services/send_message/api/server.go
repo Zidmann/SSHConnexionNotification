@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -9,12 +10,17 @@ import (
 	middleware "github.com/labstack/echo/v4/middleware"
 )
 
+
 // StartServer starts the server
 func StartServer() error {
 	// Define the port (8080 by default)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
+	}
+	project_name := os.Getenv("PROJECT_NAME")
+	if project_name == "" {
+		return errors.New("No PROJECT_NAME environment variable")
 	}
 
 	// Create an Echo instance
@@ -35,13 +41,17 @@ func StartServer() error {
 	g.GET("/isalive", isAlive)
 
 	/* Authenticated route */
-	signingKey := getJwtSigningKey()
+	signingKey, err := getJwtSigningKey(project_name)
+	if err != nil {
+		return err
+	}
 	config := getJWTconfig(signingKey)
 	g.Use(middleware.JWTWithConfig(config))
 
 	// Forward a message
-	g.POST("/message/:channel", sendMessage)
+	g.POST("/message/:channel", sendMessageFunc(project_name))
 
 	// Server
 	return e.Start(fmt.Sprintf(":%s", port))
 }
+

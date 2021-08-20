@@ -9,6 +9,7 @@ import (
 	middleware "github.com/labstack/echo/v4/middleware"
 )
 
+
 func getJWTconfig(jwt_secret string) middleware.JWTConfig {
 	signingKey := []byte(jwt_secret)
 
@@ -43,9 +44,8 @@ func getJWTconfig(jwt_secret string) middleware.JWTConfig {
 	return config
 }
 
-func extractUsername(jwt_token string, jwt_secret string) string {
+func extractClaims(jwt_token string, jwt_secret string) (jwt.MapClaims) {
 	signingKey := []byte(jwt_secret)
-
 	keyFunc := func(t *jwt.Token) (interface{}, error) {
 		return signingKey, nil
 	}
@@ -53,19 +53,16 @@ func extractUsername(jwt_token string, jwt_secret string) string {
 	token, _ := jwt.Parse(jwt_token, keyFunc)
 	claims, _ := token.Claims.(jwt.MapClaims)
 
+	return claims
+}
+
+func extractUsername(jwt_token string, jwt_secret string) string {
+	claims := extractClaims(jwt_token, jwt_secret)
 	return claims["username"].(string)
 }
 
 func hasChannel(channel string, jwt_token string, jwt_secret string) bool {
-	signingKey := []byte(jwt_secret)
-
-	keyFunc := func(t *jwt.Token) (interface{}, error) {
-		return signingKey, nil
-	}
-
-	token, _ := jwt.Parse(jwt_token, keyFunc)
-	claims, _ := token.Claims.(jwt.MapClaims)
-
+	claims := extractClaims(jwt_token, jwt_secret)
 	channels := claims["channels"].([]interface{})
 	for _, elmt := range channels {
 		if channel == elmt {
@@ -73,10 +70,5 @@ func hasChannel(channel string, jwt_token string, jwt_secret string) bool {
 		}
 	}
 	return false
-	/*
-		return claims["channels"].([]string())
-		return claims["channels"].([]interface{})
-		return claims["channels"].([]string)
-		return []string{"840656308797833227"}
-	*/
 }
+

@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+
 /*
  * Functions to interact with external services
  */
@@ -44,3 +45,4 @@ func callAPI(url string, username string, content string) (int, string, error) {
 
 	return http.StatusOK, json_string, nil
 }
+
