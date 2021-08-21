@@ -13,10 +13,10 @@ import (
 func getSecret(project_name string, variable_name string) (string, error) {
 	path := "projects/"+project_name+"/secrets/"+variable_name
 
-	if project_name != "" {
+	if project_name == "" {
 		return "", errors.New("Invalid project_name")
 	}
-	if variable_name != "" {
+	if variable_name == "" {
 		return "", errors.New("Invalid token")
 	}
 
