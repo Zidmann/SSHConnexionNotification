@@ -9,17 +9,17 @@ import (
 	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 )
 
-func getSecret(project_name string, variable_name string) (string, error) {
-	path := "projects/" + project_name + "/secrets/" + variable_name
+func getSecret(project_id string, secret_name string) (string, error) {
+	secret_id := "projects/" + project_id + "/secrets/" + secret_name + "/versions/latest"
 
-	if project_name == "" {
-		return "", errors.New("Invalid project_name")
+	if project_id == "" {
+		return "", errors.New("Invalid project_id")
 	}
-	if variable_name == "" {
-		return "", errors.New("Invalid token")
+	if secret_name == "" {
+		return "", errors.New("Invalid secret name")
 	}
 
-	// Create the client.
+	// Create the client
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
@@ -27,24 +27,27 @@ func getSecret(project_name string, variable_name string) (string, error) {
 	}
 	defer client.Close()
 
-	// Build the request.
+	// Build the request
 	req := &secretmanagerpb.GetSecretRequest{
-		Name: path,
+		Name: secret_id,
 	}
 
-	// Call the API.
+	// Call the API then check the result
 	result, err := client.GetSecret(ctx, req)
 	if err != nil {
 		return "", fmt.Errorf("Failed to get secret: %v", err)
+	}
+	if result.Name == "" {
+		return "", errors.New("Empty secret")
 	}
 
 	return result.Name, nil
 }
 
-func getJwtSigningKey(project_name string) (string, error) {
-	return getSecret(project_name, "jwt_signing_key")
+func getJwtSigningKey(project_id string) (string, error) {
+	return getSecret(project_id, "jwt_signing_key")
 }
 
-func getChatToken(project_name string, channel string) (string, error) {
-	return getSecret(project_name, "discord_token_"+channel)
+func getChatToken(project_id string, channel string) (string, error) {
+	return getSecret(project_id, "discord_token_"+channel)
 }

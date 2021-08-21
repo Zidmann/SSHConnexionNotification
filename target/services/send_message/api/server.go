@@ -17,9 +17,9 @@ func StartServer() error {
 	if port == "" {
 		port = "8080"
 	}
-	project_name := os.Getenv("PROJECT_NAME")
-	if project_name == "" {
-		return errors.New("No PROJECT_NAME environment variable")
+	project_id := os.Getenv("PROJECT_ID")
+	if project_id == "" {
+		return errors.New("No PROJECT_ID environment variable")
 	}
 
 	// Create an Echo instance
@@ -40,7 +40,7 @@ func StartServer() error {
 	g.GET("/isalive", isAlive)
 
 	/* Authenticated route */
-	signingKey, err := getJwtSigningKey(project_name)
+	signingKey, err := getJwtSigningKey(project_id)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func StartServer() error {
 	g.Use(middleware.JWTWithConfig(config))
 
 	// Forward a message
-	g.POST("/message/:channel", sendMessageFunc(project_name))
+	g.POST("/message/:channel", sendMessageFunc(project_id))
 
 	// Server
 	return e.Start(fmt.Sprintf(":%s", port))

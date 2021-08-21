@@ -17,14 +17,14 @@ func isAlive(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func sendMessageFunc(project_name string) func(c echo.Context) error {
+func sendMessageFunc(project_id string) func(c echo.Context) error {
 	sendMessage := func(c echo.Context) error {
 		// Extract the channel_id from the URL
 		channel_id := c.Param("channel")
 
 		// Check if the JWT token allows this channel
 		jwt := c.QueryParam("jwt_key")
-		signingKey, err := getJwtSigningKey(project_name)
+		signingKey, err := getJwtSigningKey(project_id)
 		if err != nil {
 			response := Response{Message: "Error in secret loading"}
 			c.JSON(http.StatusInternalServerError, response)
@@ -39,7 +39,7 @@ func sendMessageFunc(project_name string) func(c echo.Context) error {
 		}
 
 		// Extract all the required params to post the message
-		token, err := getChatToken(project_name, channel_id)
+		token, err := getChatToken(project_id, channel_id)
 		if err != nil {
 			response := Response{Message: "Error in secret loading"}
 			c.JSON(http.StatusInternalServerError, response)
