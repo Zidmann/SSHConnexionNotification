@@ -1,9 +1,3 @@
-provider "google" {
-  project = var.gcp_project_id
-  region  = var.gcp_region
-}
-
-
 resource "google_project_service" "run" {
   service = "run.googleapis.com"
 }
@@ -18,8 +12,8 @@ resource "google_cloud_run_service" "sendmsg-svc" {
       containers {
         image = var.sendmsg_app_image
         env {
-          name  = "PROJECT_NAME"
-          value = var.gcp_project_id
+          name  = "PROJECT_ID"
+          value = data.google_project.current_project.number
         }
       }
     }
