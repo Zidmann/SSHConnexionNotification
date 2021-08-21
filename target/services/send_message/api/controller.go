@@ -9,7 +9,6 @@ import (
 	echo "github.com/labstack/echo/v4"
 )
 
-
 /*
  * Controller functions
  */
@@ -18,7 +17,7 @@ func isAlive(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func sendMessageFunc(project_name string) (func (c echo.Context) error) {
+func sendMessageFunc(project_name string) func(c echo.Context) error {
 	sendMessage := func(c echo.Context) error {
 		// Extract the channel_id from the URL
 		channel_id := c.Param("channel")
@@ -78,4 +77,3 @@ func sendMessageFunc(project_name string) (func (c echo.Context) error) {
 	}
 	return sendMessage
 }
-

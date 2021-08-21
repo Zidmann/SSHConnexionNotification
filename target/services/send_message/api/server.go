@@ -10,7 +10,6 @@ import (
 	middleware "github.com/labstack/echo/v4/middleware"
 )
 
-
 // StartServer starts the server
 func StartServer() error {
 	// Define the port (8080 by default)
@@ -54,4 +53,3 @@ func StartServer() error {
 	// Server
 	return e.Start(fmt.Sprintf(":%s", port))
 }
-

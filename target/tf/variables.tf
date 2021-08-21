@@ -1,12 +1,16 @@
 variable "gcp_project_id" {
-    type = string
+  type = string
 }
 
 variable "gcp_region" {
-    type = string
+  type = string
 }
 
 variable "sendmsg_app_image" {
-    type = string
+  type = string
+}
+
+variable "jwt_signing_key" {
+  type = string
 }
 

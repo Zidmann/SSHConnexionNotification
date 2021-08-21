@@ -9,9 +9,8 @@ import (
 	secretmanagerpb "google.golang.org/genproto/googleapis/cloud/secretmanager/v1"
 )
 
-
 func getSecret(project_name string, variable_name string) (string, error) {
-	path := "projects/"+project_name+"/secrets/"+variable_name
+	path := "projects/" + project_name + "/secrets/" + variable_name
 
 	if project_name == "" {
 		return "", errors.New("Invalid project_name")
@@ -49,4 +48,3 @@ func getJwtSigningKey(project_name string) (string, error) {
 func getChatToken(project_name string, channel string) (string, error) {
 	return getSecret(project_name, "discord_token_"+channel)
 }
-

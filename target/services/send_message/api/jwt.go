@@ -9,7 +9,6 @@ import (
 	middleware "github.com/labstack/echo/v4/middleware"
 )
 
-
 func getJWTconfig(jwt_secret string) middleware.JWTConfig {
 	signingKey := []byte(jwt_secret)
 
@@ -44,7 +43,7 @@ func getJWTconfig(jwt_secret string) middleware.JWTConfig {
 	return config
 }
 
-func extractClaims(jwt_token string, jwt_secret string) (jwt.MapClaims) {
+func extractClaims(jwt_token string, jwt_secret string) jwt.MapClaims {
 	signingKey := []byte(jwt_secret)
 	keyFunc := func(t *jwt.Token) (interface{}, error) {
 		return signingKey, nil
@@ -71,4 +70,3 @@ func hasChannel(channel string, jwt_token string, jwt_secret string) bool {
 	}
 	return false
 }
-
