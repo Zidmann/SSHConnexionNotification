@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
-  title: "gateway-demo"
-  description: "API Gateway demo with 2 cloud run backends"
+  title: "gateway-notification"
+  description: "API Gateway to report notification"
   version: "1.0.0"
 #host: "planar-effect-320423.appspot.com"
 schemes:
@@ -11,23 +11,12 @@ produces:
 security:
   - api_key: []
 paths:
-  "/api/webhook/v1":
-    get:
-      operationId: "users"
-      summary: Users svc
+  "/api/notification/v1":
+    post:
+      operationId: "sendmsg-svc"
+      summary: Sendmsg svc
       x-google-backend:
-        address: ${webhook_adress}
-      responses:
-        200:
-          description: "Success."
-        404:
-          description: "Page not found"
-  "/api/isalive/v1":
-    get:
-      operationId: "locations"
-      summary: Locations svc
-      x-google-backend:
-        address: ${isalive_adress}
+        address: ${sendmsg_svc_adress}
       responses:
         200:
           description: "Success."
