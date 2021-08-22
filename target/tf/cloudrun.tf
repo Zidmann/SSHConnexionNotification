@@ -16,6 +16,7 @@ resource "google_cloud_run_service" "sendmsg-svc" {
           value = data.google_project.current_project.number
         }
       }
+      service_account_name = "${google_service_account.sendmsg-svc.email}"
     }
   }
 
