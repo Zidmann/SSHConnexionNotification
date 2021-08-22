@@ -15,7 +15,7 @@ func getSecret(project_id string, secret_name string) (string, error) {
 	if project_id == "" {
 		return "", errors.New("Invalid project_id")
 	}
-	if secret_name == "" {
+	if secret_id == "" {
 		return "", errors.New("Invalid secret name")
 	}
 
@@ -28,20 +28,24 @@ func getSecret(project_id string, secret_name string) (string, error) {
 	defer client.Close()
 
 	// Build the request
-	req := &secretmanagerpb.GetSecretRequest{
+	req := &secretmanagerpb.AccessSecretVersionRequest{
 		Name: secret_id,
 	}
 
 	// Call the API then check the result
-	result, err := client.GetSecret(ctx, req)
+	result, err := client.AccessSecretVersion(ctx, req)
 	if err != nil {
 		return "", fmt.Errorf("Failed to get secret: %v", err)
 	}
-	if result.Name == "" {
-		return "", errors.New("Empty secret")
+	if result.Payload == nil {
+		return "", errors.New("No payload found")
+	}
+	value := string(result.Payload.Data)
+	if value == "" {
+		return "", errors.New("Empty secret value")
 	}
 
-	return result.Name, nil
+	return value, nil
 }
 
 func getJwtSigningKey(project_id string) (string, error) {
