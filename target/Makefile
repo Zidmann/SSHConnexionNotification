@@ -28,9 +28,7 @@ tf-destroy:
 	(cd tf &&\
 	terraform destroy)
 
-get-gateway-url:	
-	$(eval GATEWAY_URL=$(shell gcloud beta api-gateway gateways describe $(GATEWAY_DEMO_ID) \
-	--location=$(REGION) --project=$(PROJECT_ID) \
-	--format=json|jq ".defaultHostname"))
-	@echo https://$(GATEWAY_URL)
-
+get-sendmsg-url:	
+	$(eval SENDMSG_SVC_URL=$(shell terraform output sendmsg-svc-url))
+	@echo SENDMSG_SVC_URL: $(SENDMSG_SVC_URL)
+	
