@@ -28,7 +28,7 @@ tf-destroy:
 	(cd tf &&\
 	terraform destroy)
 
-get-sendmsg-url:	
+get-sendmsg-url:
 	$(eval SENDMSG_SVC_URL=$(shell cd tf && \
 					terraform output sendmsg-svc-url))
 	@echo SENDMSG_SVC_URL: $(SENDMSG_SVC_URL)
