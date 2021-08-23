@@ -37,7 +37,7 @@ func StartServer() error {
 
 	/* Unauthenticated route */
 	// Health check route
-	g.GET("/alive", isAlive)
+	g.GET("/alive", alive)
 
 	/* Authenticated route */
 	signingKey, err := getJwtSigningKey(project_id)
