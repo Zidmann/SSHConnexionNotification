@@ -11,7 +11,7 @@ resource "google_api_gateway_api_config" "api_gw_notification" {
   openapi_documents {
     document {
       path = "spec.yaml"
-      contents = base64encode(templatefile("${path.module}/openapi.yaml.template", { sendmsg_svc_adress = "{google_cloud_run_service.sendmsg-svc.status[0].url}" }))
+      contents = base64encode(templatefile("${path.module}/openapi.yaml.template", { sendmsg_svc_adress = google_cloud_run_service.sendmsg-svc.status[0].url }))
     }
   }
   lifecycle {
