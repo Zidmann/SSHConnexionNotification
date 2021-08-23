@@ -10,7 +10,7 @@ resource "google_cloud_run_service" "sendmsg-svc" {
   template {
     spec {
       containers {
-        image = var.sendmsg_app_image
+        image = "gcr.io/${var.gcp_project_id}/sendmessage:${var.sendmsg_app_version}"
         env {
           name  = "PROJECT_ID"
           value = data.google_project.current_project.number

@@ -1,5 +1,6 @@
-cp_project_id     = ""
-gcp_region        = ""
-sendmsg_app_image = ""
-jwt_signing_key   = ""
+gcp_project_id      = ""
+gcp_region          = ""
+sendmsg_app_version = ""
+jwt_signing_key     = ""
+channel_token_list  = [{channel:"", token:""}]
 

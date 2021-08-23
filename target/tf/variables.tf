@@ -6,7 +6,7 @@ variable "gcp_region" {
   type = string
 }
 
-variable "sendmsg_app_image" {
+variable "sendmsg_app_version" {
   type = string
 }
 
