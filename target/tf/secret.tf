@@ -6,7 +6,7 @@ resource "google_secret_manager_secret" "jwt_signing_key" {
 }
 
 resource "google_secret_manager_secret" "channel_tokens" {
-  for_each = {for channel_token in var.channel_token_list: channel_token.channel => channel_token}
+  for_each  = { for channel_token in var.channel_token_list: channel_token.channel => channel_token }
   secret_id = "discord_token_${each.value.channel}"
   replication {
     automatic = true
