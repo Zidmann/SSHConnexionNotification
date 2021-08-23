@@ -10,8 +10,8 @@ resource "google_api_gateway_api_config" "api_gw_notification" {
 
   openapi_documents {
     document {
-      path = "spec.yaml"
-      contents = base64encode(templatefile("${path.module}/openapi.yaml.template", { sendmsg_svc_adress = google_cloud_run_service.sendmsg-svc.status[0].url	 }))
+      path     = "spec.yaml"
+      contents = base64encode(templatefile("${path.module}/openapi.yaml.template", { sendmsg_svc_adress = google_cloud_run_service.sendmsg-svc.status[0].url }))
     }
   }
   lifecycle {
@@ -25,4 +25,3 @@ resource "google_api_gateway_gateway" "api_gw_notification" {
   api_config = google_api_gateway_api_config.api_gw_notification.id
   gateway_id = "gateway-notification"
 }
-
