@@ -12,7 +12,7 @@ import (
 /*
  * Controller functions
  */
-func isAlive(c echo.Context) error {
+func alive(c echo.Context) error {
 	response := Response{Message: "Hello I am still alive !"}
 	return c.JSON(http.StatusOK, response)
 }
