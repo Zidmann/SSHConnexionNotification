@@ -1,6 +1,6 @@
 resource "google_api_gateway_api" "api_gw_notification" {
   provider = google-beta
-  api_id   = "api-gw-notification"
+  api_id   = "gateway-notification"
 }
 
 resource "google_api_gateway_api_config" "api_gw_notification" {
@@ -11,7 +11,7 @@ resource "google_api_gateway_api_config" "api_gw_notification" {
   openapi_documents {
     document {
       path = "spec.yaml"
-      contents = base64encode(templatefile("${path.module}/openapi.yaml.template", { sendmsg_svc_adress = google_cloud_run_service.sendmsg-svc.status[0].url }))
+      contents = base64encode(templatefile("${path.module}/openapi.yaml.template", { sendmsg_svc_adress = google_cloud_run_service.sendmsg-svc.status[0].url	 }))
     }
   }
   lifecycle {
@@ -23,6 +23,6 @@ resource "google_api_gateway_gateway" "api_gw_notification" {
   provider   = google-beta
   region     = var.gcp_region
   api_config = google_api_gateway_api_config.api_gw_notification.id
-  gateway_id = "api-gw-notification"
+  gateway_id = "gateway-notification"
 }
 
