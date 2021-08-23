@@ -16,7 +16,7 @@ paths:
       operationId: "sendmsg-svc"
       summary: Sendmsg svc
       x-google-backend:
-        address: "${sendmsg_svc_adress}"
+        address: "${sendmsg_svc_adress}/api/message/"
       responses:
         200:
           description: "Success"
