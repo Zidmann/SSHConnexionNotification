@@ -7,8 +7,7 @@ resource "google_secret_manager_secret" "jwt_signing_key" {
 }
 
 resource "google_secret_manager_secret_version" "jwt_signing_key" {
-  secret = google_secret_manager_secret.jwt_signing_key.id
-
+  secret      = google_secret_manager_secret.jwt_signing_key.id
   secret_data = var.jwt_signing_key
 }
 
