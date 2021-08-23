@@ -7,6 +7,7 @@ gcp-enable-apis:
 	gcloud services enable apigateway.googleapis.com --project $(PROJECT_ID)
 	gcloud services enable servicemanagement.googleapis.com --project $(PROJECT_ID)
 	gcloud services enable servicecontrol.googleapis.com --project $(PROJECT_ID)
+	gcloud services enable secretmanager.googleapis.com --project $(PROJECT_ID)
 
 gcr-push-services:
 	(cd services/send_message &&\
