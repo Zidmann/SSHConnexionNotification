@@ -14,3 +14,10 @@ variable "jwt_signing_key" {
   type = string
 }
 
+variable "channel_token_list" {
+  type = list(object({
+    channel = string,
+    token   = string
+  }))
+}
+
