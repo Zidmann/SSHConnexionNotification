@@ -14,6 +14,9 @@ resource "google_api_gateway_api_config" "api_gw_notification" {
       contents = base64encode(templatefile("${path.module}/openapi.yaml.template", { sendmsg_svc_adress = google_cloud_run_service.sendmsg-svc.status[0].url }))
     }
   }
+  backend_config {
+    google_service_account = google_service_account.api-gw-notification.email
+  }
   lifecycle {
     create_before_destroy = true
   }
