@@ -29,6 +29,7 @@ resource "google_cloud_run_service" "sendmsg-svc" {
 }
 
 resource "google_cloud_run_service_iam_member" "api-gw-notification" {
+  location = google_cloud_run_service.sendmsg-svc.location
   service  = google_cloud_run_service.sendmsg-svc.name
   role     = "roles/viewer"
   member   = "serviceAccount:${google_service_account.api-gw-notification.email}"
