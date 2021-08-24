@@ -28,9 +28,8 @@ resource "google_cloud_run_service" "sendmsg-svc" {
   depends_on = [google_project_service.run]
 }
 
-resource "google_cloud_run_service_iam" "api-gw-notification" {
-  project   = data.google_project.current_project.project_id
-  secret_id = google_secret_manager_secret.jwt_signing_key.secret_id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${api-gw-notification.sendmsg-svc.email}"
+resource "google_cloud_run_service_iam_member" "api-gw-notification" {
+  service  = google_cloud_run_service.sendmsg-svc.name
+  role     = "roles/viewer"
+  member   = "serviceAccount:${google_service_account.api-gw-notification.email}"
 }
