@@ -48,7 +48,7 @@ func StartServer() error {
 	g.Use(middleware.JWTWithConfig(config))
 
 	// Forward a message
-	g.POST("/message/:channel", sendMessageFunc(project_id))
+	g.POST("/message", sendMessageFunc(project_id))
 
 	// Server
 	return e.Start(fmt.Sprintf(":%s", port))
