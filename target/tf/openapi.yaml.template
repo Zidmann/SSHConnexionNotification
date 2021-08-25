@@ -11,12 +11,19 @@ produces:
 security:
   - api_key: []
 paths:
-  "/api/notification/v1":
+  "/api/notification/v1/{channelId}":
     post:
       operationId: "sendmsg-svc"
-      summary: Sendmsg svc
+      summary: Send a message
+      parameters:
+        - type: string
+          name: channelId
+          in: path
+          required: true
+          description: Channel ID of the channel to post a message
       x-google-backend:
-        address: "${sendmsg_svc_adress}/api/message/"
+        address: "${sendmsg_svc_adress}/api/message"
+        path_translation: CONSTANT_ADDRESS
       responses:
         200:
           description: "Success"
@@ -32,6 +39,6 @@ securityDefinitions:
   # This section configures basic authentication with an API key.
   api_key:
     type: "apiKey"
-    name: "key"
+    name: "api_key"
     in: "query"
 
