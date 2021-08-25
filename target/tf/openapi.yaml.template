@@ -11,13 +11,13 @@ produces:
 security:
   - api_key: []
 paths:
-  "/api/notification/v1/{channelId}":
+  "/api/notification/v1/{channel_id}":
     post:
       operationId: "sendmsg-svc"
       summary: Send a message
       parameters:
         - type: string
-          name: channelId
+          name: channel_id
           in: path
           required: true
           description: Channel ID of the channel to post a message

@@ -20,7 +20,7 @@ func alive(c echo.Context) error {
 func sendMessageFunc(project_id string) func(c echo.Context) error {
 	sendMessage := func(c echo.Context) error {
 		// Extract the channel_id from the URL
-		channel_id := c.QueryParam("channel")
+		channel_id := c.QueryParam("channel_id")
 
 		// Check if the JWT token allows this channel
 		jwt := c.QueryParam("jwt_key")
