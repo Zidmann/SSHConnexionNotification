@@ -25,3 +25,11 @@ resource "google_secret_manager_secret_iam_member" "jwt_signing_key" {
   member    = "serviceAccount:${google_service_account.sendmsg-svc.email}"
 }
 
+resource "google_secret_manager_secret_iam_member" "channel_tokens" {
+  for_each  = { for iam in google_secret_manager_secret.channel_tokens : iam.secret_id => iam }
+  project   = data.google_project.current_project.project_id
+  secret_id = each.value.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${google_service_account.sendmsg-svc.email}"
+}
+
