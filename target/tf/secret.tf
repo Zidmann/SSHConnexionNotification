@@ -18,6 +18,12 @@ resource "google_secret_manager_secret_version" "jwt_signing_key" {
   secret_data = var.jwt_signing_key
 }
 
+resource "google_secret_manager_secret_version" "channel_tokens" {
+  for_each    = { for channel_token in var.channel_token_list : channel_token.channel => channel_token }
+  secret      = "projects/${data.google_project.current_project.project_id}/secrets/discord_token_${each.value.channel}"
+  secret_data = each.value.token
+}
+
 resource "google_secret_manager_secret_iam_member" "jwt_signing_key" {
   project   = data.google_project.current_project.project_id
   secret_id = google_secret_manager_secret.jwt_signing_key.secret_id
