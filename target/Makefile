@@ -34,3 +34,8 @@ get-sendmsg-url:
 					terraform output sendmsg-svc-url))
 	@echo SENDMSG_SVC_URL: $(SENDMSG_SVC_URL)
 
+get-notification-url:
+	$(eval NOTIFICATION_GW_URL=$(shell cd tf && \
+					    terraform output notification-gw-url))
+	@echo NOTIFICATION_GW_URL: $(NOTIFICATION_GW_URL)
+
