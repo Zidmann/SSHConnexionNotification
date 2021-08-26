@@ -30,11 +30,13 @@ logger -t ssh-wrapper "$MESSAGE"
 if [ -f "$ENV_FILE" ]
 then
 	source "$ENV_FILE"
-	curl -X POST -H "Content-Type: application/json"  -d "{\"username\":\"$HOSTNAME\", \"content\":\"$MESSAGE\"}" "$WEBHOOK_URL"
+	curl -X POST -H "Content-Type: application/json"  -d "{\"username\":\"$HOSTNAME\", \"content\":\"$MESSAGE\"}" "$SSHCONNECT_WEBHOOK_URL"
 	RSLT="$?"
 	if [ "$RSLT" != "0" ]
 	then
 		logger -t ssh-wrapper "[-] Error in the curl command to the webhook to notify an SSH connection [error code ($RSLT)]"
 	fi
+else
+	logger -t ssh-wrapper "[-] Error no environment file found to notify an SSH connection"
 fi
 
