@@ -31,6 +31,7 @@ WORKDIR /app
 COPY --from=builder /app/main ./main
 
 ############################################################################
-# Run the binary
+# Run the binary with a non-root user
+USER 1000
 ENTRYPOINT ["./main"]
 
